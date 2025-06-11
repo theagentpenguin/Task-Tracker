@@ -16,12 +16,14 @@ if (args[0].toLowerCase() === "add" ){
 // if (args[0].toLowerCase() === "delete" ){
 //     deleteTask(args[1]);
 // }
-// if (args[0].toLowerCase() === "list" ){
-//     listTask(args[1]);
-// }
+if (args[0].toLowerCase() === "list" ){
+    const fileContent = fs.readFileSync('data.json','utf8');
+    let existingTasks = JSON.parse(fileContent);
+    console.log(existingTasks);
+}
 function addTask(data){
 
-    console.log("Added task:" + chalk.yellow(data));
+    console.log("Added task:" + chalk.yellow(data[1]));
     
     if(data.length !==2){
         console.log("Enter the data properly");
@@ -36,14 +38,29 @@ function addTask(data){
         }
     };
     tasks.push(taskObject);
-    console.log(taskObject);
+    
     loadTasks();
     return;
 
 }
-console.log(tasks);
+//console.log(tasks);
 function loadTasks(){
-    fs.writeFileSync('data.json', JSON.stringify(tasks, 2),'utf8');
+    if(checkFile()){
+        const fileContent = fs.readFileSync('data.json','utf8');
+        let existingTasks = JSON.parse(fileContent);
+        tasks.push(...existingTasks);
+        fs.writeFileSync('data.json', JSON.stringify(tasks,null, 2),'utf8');
+    }
+    else{
+        fs.writeFileSync('data.json', JSON.stringify(tasks,null, 2),'utf8');
+    }
+    
+}
+
+function checkFile(){
+    if(fs.existsSync('data.json')){
+        return true;
+    }
 }
 // function updateTask(data){
 //     console.log("Updated task:" + data);
