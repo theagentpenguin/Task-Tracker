@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 let args = process.argv.slice(2);
 //console.log(args[1]);
 
@@ -14,7 +15,7 @@ if (args[0].toLowerCase() === "list" ){
     listTask(args[1]);
 }
 function addTask(data){
-    console.log("Added task:" + data);
+    console.log("Added task:" + chalk.yellow(data));
 }
 
 function updateTask(data){
