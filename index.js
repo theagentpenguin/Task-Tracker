@@ -13,6 +13,7 @@ if (args[0].toLowerCase() === "add" ){
     addTask(args);
 }
 if (args[0].toLowerCase() === "update" ){
+    // we're pushing just the second and third arguments as data, second one being the id, third is the update
     let data = [args[1],args[2]];
     updateTask(data);
 }
@@ -32,11 +33,17 @@ function checkFile(){
 }
 
 function isFileEmpty(){
-    /* This function checks if the json file is empty, important to prevent runtime issues */
+   /* This function checks if the json file is empty, important to prevent runtime issues */
     const fileData = fs.readFileSync('data.json','utf8');
     if(fileData.length === 0){
         return true;
     }
+}
+
+function searchIndex(id){
+    const fileData = fs.readFileSync('data.json','utf8');
+    const tasks = JSON.parse(fileData);
+    return tasks.findIndex(task => task.id === id);
 }
 
 function loadTasks(){
@@ -57,18 +64,18 @@ function loadTasks(){
 }
 
 function listTask(){
-    if(isFileEmpty()){
-        console.log("The list is empty, start adding!");
-    }
-    else if(checkFile()){
+    
+    if(checkFile()){
         
-        const fileContent = fs.readFileSync('data.json','utf8');
-        let existingTasks = JSON.parse(fileContent);
-        console.log(existingTasks);
+
+            const fileContent = fs.readFileSync('data.json','utf8');
+            let existingTasks = JSON.parse(fileContent);
+            console.log(existingTasks);
     }
-    else{
-        console.log("There is no list yet. Start to add tasks");
-    }    
+    if(!checkFile()){
+        console.log("File does not exist")
+    }
+      
 }
 
 function addTask(data){
@@ -103,7 +110,9 @@ function addTask(data){
 
 function updateTask(data){
     console.log("Updated task:" + chalk.green(data[1]));
-    
+    let id = data[0];
+    searchIndex(id);
+
 }
 
 
