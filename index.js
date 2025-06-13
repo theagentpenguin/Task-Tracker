@@ -9,10 +9,15 @@ let emptyArray = [];
 let taskObject;
 let currentTime = new Date();
 
+if(!fs.existsSync('data.json')){
+        fs.writeFileSync('data.json',JSON.stringify(emptyArray,null,2),'utf8');
+    }
+
 if (args[0].toLowerCase() === "add" ){
     addTask(args);
 }
 if (args[0].toLowerCase() === "update" ){
+
     // we're pushing just the second and third arguments as data, second one being the id, third is the update
     let data = [args[1],args[2]];
     updateTask(data);
@@ -112,6 +117,7 @@ function addTask(data){
 
 
 function updateTask(data){
+    
     console.log("Updated task:" + chalk.green(data[1]));
     let id = data[0];
     const fileContent = fs.readFileSync('data.json','utf8');
@@ -120,6 +126,7 @@ function updateTask(data){
         for(let i=0; i<existingTasks.length; i++){
             if(existingTasks[i].id===id){
                 existingTasks[i].desc = data[1];
+                existingTasks[i].updatedAt = currentTime.toLocaleString();
                 fs.writeFileSync('data.json', JSON.stringify(existingTasks, null, 2), 'utf8');
                 
             }
