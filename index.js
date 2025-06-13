@@ -30,7 +30,8 @@ if (args[0].toLowerCase() === "delete" ){
 }
 
 if (args[0].toLowerCase() === "list" ){
-    listTask();
+    let data = [args[0],args[1]];
+    listTask(data);
 }
 
 if (args[0].toLowerCase() === "mark-in-progress" ){
@@ -83,17 +84,36 @@ function loadTasks(){
     
 }
 
-function listTask(){
-    
-    if(checkFile()){
-        
-
+function listTask(data){
+    if(!data[1]){
+        if(checkFile()){
             const fileContent = fs.readFileSync('data.json','utf8');
             let existingTasks = JSON.parse(fileContent);
             console.log(existingTasks);
+            //console.log("printed from the wrong box!")
+        }
+        if(!checkFile()){
+            console.log("File does not exist")
+        }
+
     }
-    if(!checkFile()){
-        console.log("File does not exist")
+    else{
+        
+        if(checkFile()){
+            const fileContent = fs.readFileSync('data.json','utf8');
+            let existingTasks = JSON.parse(fileContent);
+            let sortedList = [];
+            for(let i = 0; i<existingTasks.length; i++){
+                if(existingTasks[i].status===data[1]){
+                    //console.log("inside the block");
+                    sortedList.push(existingTasks[i]);
+                }
+
+            }
+            //console.log("outside the block")
+            console.log(sortedList);
+        }
+    
     }
       
 }
