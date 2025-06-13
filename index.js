@@ -3,12 +3,12 @@ import fs from 'fs';
 
 const TASKS_FILE = 'tasks.json';
 let args = process.argv.slice(2);
-//console.log(args[1]);
 let tasks = [];
 let emptyArray = [];
 let taskObject;
 let currentTime = new Date();
 
+//If the file is not present in the project directory, this will ensure that a new empty one gets created.
 if(!fs.existsSync('data.json')){
         fs.writeFileSync('data.json',JSON.stringify(emptyArray,null,2),'utf8');
     }
@@ -85,18 +85,20 @@ function loadTasks(){
 }
 
 function listTask(data){
+    // we will display all the items if the command is just 'list'. 
     if(!data[1]){
         if(checkFile()){
             const fileContent = fs.readFileSync('data.json','utf8');
             let existingTasks = JSON.parse(fileContent);
             console.log(existingTasks);
-            //console.log("printed from the wrong box!")
         }
         if(!checkFile()){
             console.log("File does not exist")
         }
 
     }
+    // if there is an additional command after list to sort the items, based on status
+    // the following block will get executed.
     else{
         
         if(checkFile()){
@@ -105,12 +107,10 @@ function listTask(data){
             let sortedList = [];
             for(let i = 0; i<existingTasks.length; i++){
                 if(existingTasks[i].status===data[1]){
-                    //console.log("inside the block");
                     sortedList.push(existingTasks[i]);
                 }
 
             }
-            //console.log("outside the block")
             console.log(sortedList);
         }
     
@@ -228,7 +228,4 @@ function markDone(data){
     }
 }
 
-// function listTasks(data){
-//     console.log("List of tasks:" + data);
-// }
 
