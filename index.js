@@ -47,6 +47,9 @@ function searchIndex(id){
 }
 
 function loadTasks(){
+    if(!checkFile()){
+        fs.writeFileSync('data.json',JSON.stringify(emptyArray,null,2),'utf8');
+    }
     /* To check if the file is empty and if empty, an empty array will be pushed into the file first */
     if(isFileEmpty()){
         fs.writeFileSync('data.json',JSON.stringify(emptyArray,null,2),'utf8');
@@ -111,7 +114,20 @@ function addTask(data){
 function updateTask(data){
     console.log("Updated task:" + chalk.green(data[1]));
     let id = data[0];
-    searchIndex(id);
+    const fileContent = fs.readFileSync('data.json','utf8');
+    let existingTasks = JSON.parse(fileContent);
+    if(searchIndex(id)!== -1){
+        for(let i=0; i<existingTasks.length; i++){
+            if(existingTasks[i].id===id){
+                existingTasks[i].desc = data[1];
+                fs.writeFileSync('data.json', JSON.stringify(existingTasks, null, 2), 'utf8');
+                
+            }
+        }
+    }
+    else{
+        console.log("Task not present in the list.");
+    }
 
 }
 
