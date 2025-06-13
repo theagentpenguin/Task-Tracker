@@ -23,12 +23,24 @@ if (args[0].toLowerCase() === "update" ){
     updateTask(data);
 }
 
-// if (args[0].toLowerCase() === "delete" ){
-//     deleteTask(args[1]);
-// }
+if (args[0].toLowerCase() === "delete" ){
+    // we're pushing the second argument as data, since it is the id that we have to delete
+    let data = [args[1]]
+    deleteTask(data);
+}
 
 if (args[0].toLowerCase() === "list" ){
     listTask();
+}
+
+if (args[0].toLowerCase() === "mark-in-progress" ){
+    let data = [args[1]];
+    updateProgress(data);
+}
+
+if (args[0].toLowerCase() === "mark-done" ){
+    let data = [args[1]];
+    markDone(data);
 }
 
 function checkFile(){
@@ -140,13 +152,61 @@ function updateTask(data){
 
 
 
-// function deleteTask(data){
-//     console.log("Deleted task:" + data);
-// }
+function deleteTask(data){
+    console.log("Deleted task:" + data);
+    let id = data[0];
+    const fileContent = fs.readFileSync('data.json','utf8');
+    let existingTasks = JSON.parse(fileContent);
+    if(searchIndex(id)!== -1){
+        for(let i=0; i<existingTasks.length; i++){
+            if(existingTasks[i].id===id){
+                existingTasks.splice(i,1);
+                fs.writeFileSync('data.json', JSON.stringify(existingTasks, null, 2), 'utf8');
+                
+            }
+        }
+    }
+    else{
+        console.log("Task not present in the list.");
+    }
+}
 
-// function currentStatus(data){
-//     console.log("Current status:" + data);
-// }
+function updateProgress(data){
+    console.log("Progress updated:" + data);
+    let id = data[0];
+    const fileContent = fs.readFileSync('data.json','utf8');
+    let existingTasks = JSON.parse(fileContent);
+    if(searchIndex(id)!== -1){
+        for(let i=0; i<existingTasks.length; i++){
+            if(existingTasks[i].id===id){
+                existingTasks[i].status="in-progress"
+                fs.writeFileSync('data.json', JSON.stringify(existingTasks, null, 2), 'utf8');
+                
+            }
+        }
+    }
+    else{
+        console.log("Task not present in the list.");
+    }
+}
+
+function markDone(data){
+    let id = data[0];
+    const fileContent = fs.readFileSync('data.json','utf8');
+    let existingTasks = JSON.parse(fileContent);
+    if(searchIndex(id)!== -1){
+        for(let i=0; i<existingTasks.length; i++){
+            if(existingTasks[i].id===id){
+                existingTasks[i].status="done"
+                fs.writeFileSync('data.json', JSON.stringify(existingTasks, null, 2), 'utf8');
+                
+            }
+        }
+    }
+    else{
+        console.log("Task not present in the list.");
+    }
+}
 
 // function listTasks(data){
 //     console.log("List of tasks:" + data);
